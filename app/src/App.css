@@ -1,0 +1,66 @@
+body {
+    font-family: Tahoma;
+    font-size: 14px
+}
+
+#modal-bg {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(1, 1, 1, 0.5);
+}
+
+.modal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px 5px 5px;
+    padding: 16px;
+    width:384px;
+}
+
+.modal .close-button {
+    float: right;
+    font-weight: bolder;
+    font-size: 16px;
+    color: gray;
+}
+
+.modal .close-button:hover {
+    cursor:pointer;
+    color:black;
+}
+
+.custom-form {
+    width: 100%;
+}
+
+.form-div {
+    margin-top: 16px;
+}
+
+.form-div-flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.form-div-flex input {
+    flex-grow: 1
+}
+
+.form-div label {
+    margin-right: 16px;
+}
+
+.form-div-cols {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
