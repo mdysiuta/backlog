@@ -1,6 +1,43 @@
 body {
     font-family: Tahoma;
-    font-size: 14px
+    font-size: 14px;
+    background-color: rgba(239, 239, 239, 1);
+}
+
+#main-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px 5px 5px;
+    padding: 16px;
+    width: 976px;
+}
+
+#backlog-items {
+    display:flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.backlog-item {
+    border: 1px solid darkgray;
+    border-radius: 5px 5px 5px;
+    margin: 8px;
+    padding: 16px;
+    width: 144px;
+}
+
+.backlog-item:hover {
+    cursor: pointer;
+    background-color: rgba(239, 239, 239, 1);
+}
+
+.backlog-item .item-title {
+    font-weight: bold;
 }
 
 #modal-bg {

@@ -4,7 +4,7 @@ export type Category = {
 }
 
 export type Item = {
-    id: number,
+    id: string,
     name: string,
     year: number,
     genre: string,
