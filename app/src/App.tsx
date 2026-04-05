@@ -11,43 +11,35 @@ function App() {
         name: 'Desconocido',
     }
 
-    const [modal, setModal] = useState(false)
-    const [activeItem, setActiveItem] = useState<Item>({
+    const emptyItem : Item = {
         id: '',
         name: '',
         year: 0,
         category: category,
         genre: ''
-    })
-    const [addItemModalOpen, setAddItemModalOpen] = useState(false)
-    const [editItemModalOpen, setEditItemModalOpen] = useState(false)
-    const [showItemModalOpen, setShowItemModalOpen] = useState(false)
+    }
+
+    const [modal, setModal] = useState(false)
+    const [activeItem, setActiveItem] = useState<Item>(emptyItem)
+    const [activeModal, setActiveModal] = useState('')
 
     const [items, setItems] = useState<Item[]>([])
     
     const toggleModal = () => {
         setModal(false)
-        setAddItemModalOpen(false)
-        setShowItemModalOpen(false)
-        setEditItemModalOpen(false)
+        setActiveModal('')
     }
 
-    const toggleAddItemModal = () => {
-        setModal(!modal)
-        setAddItemModalOpen(!addItemModalOpen)
-        setActiveItem({
-            id: '',
-            name: '',
-            year: 0,
-            category: category,
-            genre: ''
-        })
+    const openAddItemModal = () => {
+        setModal(true)
+        setActiveModal('addItem')
+        setActiveItem(emptyItem)
     }
 
     const toggleShowItemModal = (item : Item) => {
-        setModal(!modal)
-        setShowItemModalOpen(!showItemModalOpen)
+        setModal(true)
         setActiveItem(item)
+        setActiveModal('showItem')
 
         const name : Element | null = document.querySelector('#show-item-name')
         const year : Element | null = document.querySelector('#show-item-year')
@@ -94,20 +86,30 @@ function App() {
                 category: activeItem!.category
             }
         }))
-        setShowItemModalOpen(true)
-        setEditItemModalOpen(false)
+
+        const name : Element | null = document.querySelector('#show-item-name')
+        const year : Element | null = document.querySelector('#show-item-year')
+        const category : Element | null = document.querySelector('#show-item-category')
+        const genre : Element | null = document.querySelector('#show-item-genre')
+
+        name!.innerHTML = data.get('name'),
+        year!.innerHTML = data.get('year') ? data.get('year').toString() : 'n/a'
+        category!.innerHTML = activeItem!.category.name
+        genre!.innerHTML = data.get('genre') ? data.get('genre') : 'Desconocido'
+
+        setActiveModal('showItem')
     }
 
     const toggleEditModal = () => {
-        setShowItemModalOpen(false)
-        setEditItemModalOpen(true)
+        setModal(true)
+        setActiveModal('editItem')
     }
     
     return (
         <>
             <div id='main-container'>
                 <div>
-                    <button onClick={toggleAddItemModal}>Añadir ítem</button>
+                    <button onClick={openAddItemModal}>Añadir ítem</button>
                 </div>
                 <div id='backlog-items'>
                     {
@@ -126,7 +128,7 @@ function App() {
                 <div onClick={toggleModal} id={'modal-bg'} /> {/* BLACK OVERLAY */}
 
                 {/* ADD ITEM MODAL START */}
-                <div className={'modal'} style={{display: addItemModalOpen ? '' : 'none'}}>
+                <div className={'modal'} style={{display: activeModal === 'addItem' ? '' : 'none'}}>
                     <div className={'close-button'} onClick={toggleModal}>&times;</div>
                     <div>
                         <b>Añadir ítem</b>
@@ -167,7 +169,7 @@ function App() {
                 {/* ADD ITEM MODAL END */}
 
                 {/* EDIT ITEM MODAL START */}
-                <div className={'modal'} style={{display: editItemModalOpen ? '' : 'none'}}>
+                <div className={'modal'} style={{display: activeModal === 'editItem' ? '' : 'none'}}>
                     <div className={'close-button'} onClick={toggleModal}>&times;</div>
                     <div>
                         <b>Editar ítem</b>
@@ -184,7 +186,7 @@ function App() {
                 {/* EDIT ITEM MODAL END */}
 
                 {/* SHOW ITEM MODAL START */}
-                <div className={'modal'} style={{display: showItemModalOpen ? '' : 'none'}}>
+                <div className={'modal'} style={{display: activeModal === 'showItem' ? '' : 'none'}}>
                     <div className={'close-button'} onClick={toggleModal}>&times;</div>
                     <div><b>Nombre</b></div>
                     <div id='show-item-name'/>
