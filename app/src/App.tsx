@@ -72,7 +72,7 @@ function App() {
     const updateShowItemInfo = (item : Item) => {
         document.querySelector('#show-item-name')!.innerHTML = item.name
         document.querySelector('#show-item-year')!.innerHTML = item.year ? item.year.toString() : 'n/a'
-        document.querySelector('#show-item-category')!.innerHTML = item.category.name
+        document.querySelector('#show-item-category')!.innerHTML = item.category ? item.year.toString() : '---'
         document.querySelector('#show-item-genre')!.innerHTML = item.genre ? item.genre : 'Desconocido'
     }
 
@@ -97,6 +97,19 @@ function App() {
         setModal(true)
         setActiveCategory(category)
         setActiveModal('editCategory')
+    }
+
+    const openConfirmDeleteItemModal = () => {
+        setModal(true)
+        document.querySelector('#confirm-delete-name')!.innerHTML = activeItem.name
+        setActiveModal('deleteItem')
+    }
+
+    const openConfirmDeleteCategoryModal = (category : Category) => {
+        setModal(true)
+        document.querySelector('#confirm-delete-name')!.innerHTML = activeCategory.name
+        setActiveCategory(category)
+        setActiveModal('deleteCategory')
     }
 
     const addItem = (data: { get: (arg0: string) => any }) => {
@@ -153,6 +166,20 @@ function App() {
         }))
 
         setActiveModal('showCategories')
+    }
+
+    const deleteActiveItem = () => {
+        setItems(items.filter(item => {
+            if (item.id !== activeItem!.id) return item
+        }))
+        closeModal()
+    }
+
+    const deleteActiveCategory = () => {
+        setCategories(categories.filter(category => {
+            if (category.id !== activeCategory!.id) return category
+        }))
+        closeModal()
     }
     
     return (
@@ -227,6 +254,9 @@ function App() {
                     <div>
                         <a href='#' onClick={openEditItemModal}>🖉 Editar</a>
                     </div>
+                    <div>
+                        <a href='#' style={{color: 'red'}} onClick={openConfirmDeleteItemModal}>🗑 Eliminar</a>
+                    </div>
                 </div>
                 {/* SHOW ITEM MODAL END */}
 
@@ -235,7 +265,11 @@ function App() {
                     <div className={'close-button'} onClick={closeModal}>&times;</div>
                     {
                         categories.map(category => (
-                            <div>{category.name}<a href='#' onClick={() => openEditCategoryModal(category)}>🖉 Editar</a></div>
+                            <div>
+                                {category.name}
+                                <a href='#' onClick={() => openEditCategoryModal(category)}>🖉 Editar</a>
+                                <a href='#' style={{color: 'red'}} onClick={() => openConfirmDeleteCategoryModal(category)}>🗑 Eliminar</a>
+                            </div>
                         ))
                     }
                 </div>
@@ -266,6 +300,24 @@ function App() {
                     </form>
                 </div>
                 {/* EDIT CATEGORY MODAL END */}
+
+                {/* CONFIRM DELETE ITEM MODAL START */}
+                <div className={'modal'} style={{display: activeModal === 'deleteItem' ? '' : 'none'}}>
+                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                    <div>¿Está seguro que desea eliminar el ítem '<b><span id="confirm-delete-name"></span></b>'?</div>
+                    <div style={{color: 'red'}}><b>Esta acción es irreversible.</b></div>
+                    <button onClick={deleteActiveItem}>Eliminar</button>
+                </div>
+                {/* CONFIRM DELETE ITEM MODAL END */}
+
+                {/* CONFIRM DELETE CATEGORY MODAL START */}
+                <div className={'modal'} style={{display: activeModal === 'deleteCategory' ? '' : 'none'}}>
+                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                    <div>¿Está seguro que desea eliminar la categoría '<b><span id="confirm-delete-name"></span></b>'?</div>
+                    <div style={{color: 'red'}}><b>Esta acción es irreversible.</b></div>
+                    <button onClick={deleteActiveCategory}>Eliminar</button>
+                </div>
+                {/* CONFIRM DELETE CATEGORY MODAL END */}
             </div>
         </>
     )

@@ -49,7 +49,7 @@ export default function ItemForm({categories, state} : ItemFormTypes)
                         <option>---</option>
                         {
                             categories.map(category => (
-                                <option key={category.id} value={category.id} selected={category.id === item.category.id ? true : false}>{category.name}</option>
+                                <option key={category.id} value={category.id} selected={item.category ? (category.id === item.category.id ? true : false) : false}>{category.name}</option>
                             ))
                         }
                     </select>
