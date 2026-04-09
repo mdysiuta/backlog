@@ -137,6 +137,7 @@ function App() {
         }))
 
         updateShowItemInfo(editedItem)
+        setActiveItem(editedItem)
         setActiveModal('showItem')
     }
 
