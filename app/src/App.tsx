@@ -130,31 +130,7 @@ function App() {
                     </div>
                     <div className={'custom-form'}>
                         <form action={addItem} id='add-item-form'>
-                            <div className='form-div form-div-flex'>
-                                <label>Nombre</label>
-                                <input type="text" name="name"></input>
-                            </div>
-                            <div className='form-div form-div-cols'>
-                                <div>
-                                    <label>Año</label>
-                                    <input type="number" name="year"></input>
-                                </div>
-                                <div>
-                                    <label>Categoría</label>
-                                    <select>
-                                        <option>---</option>
-                                        {
-                                            categories.map(category => (
-                                                <option key={category.id}>{category.name}</option>
-                                            ))
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                            <div className='form-div form-div-flex'>
-                                <label>Género</label>
-                                <input type="text" name="genre"></input>
-                            </div>
+                            <ItemForm categories={categories} state={emptyItem}></ItemForm>
                             <div className='form-div'>
                                 <button>Añadir</button>
                             </div>
