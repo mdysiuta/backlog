@@ -9,7 +9,7 @@ type ItemFormTypes = {
 export default function ItemForm({categories, state} : ItemFormTypes)
 {
     const category : Category = {
-        id: 0,
+        id: '',
         name: 'Desconocido',
     }
 
@@ -45,11 +45,11 @@ export default function ItemForm({categories, state} : ItemFormTypes)
                 </div>
                 <div>
                     <label>Categoría</label>
-                    <select>
+                    <select name="category" id="category">
                         <option>---</option>
                         {
                             categories.map(category => (
-                                <option key={category.id} selected={category.id === item.category.id ? true : false}>{category.name}</option>
+                                <option key={category.id} value={category.id} selected={category.id === item.category.id ? true : false}>{category.name}</option>
                             ))
                         }
                     </select>

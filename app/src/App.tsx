@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react'
-import { categories } from './data/categories'
 import './App.css'
 import type { Category, Item } from './types/types'
 import { v4 as uuidv4 } from 'uuid';
 import ItemForm from './components/ItemForm';
+import CategoryForm from './components/CategoryForm';
 
 function App() {
     const category : Category = {
-        id: 0,
+        id: '',
         name: 'Desconocido',
+    }
+
+    const emptyCategory : Category = {
+        id: '',
+        name: '',
     }
 
     const emptyItem : Item = {
@@ -24,15 +29,26 @@ function App() {
         return itemsJson ? JSON.parse(itemsJson) : []
     }
 
+    const initialCategories = () => {
+        const categoriesJson = localStorage.getItem('categories')
+        return categoriesJson ? JSON.parse(categoriesJson) : []
+    }
+
     const [modal, setModal] = useState(false)
     const [activeItem, setActiveItem] = useState<Item>(emptyItem)
+    const [activeCategory, setActiveCategory] = useState<Category>(emptyCategory)
     const [activeModal, setActiveModal] = useState('')
 
     const [items, setItems] = useState<Item[]>(initialItems())
+    const [categories, setCategories] = useState<Category[]>(initialCategories())
 
     useEffect(() => {
         localStorage.setItem('items', JSON.stringify(items))
     }, [items])
+
+    useEffect(() => {
+        localStorage.setItem('categories', JSON.stringify(categories))
+    }, [categories])
     
     const closeModal = () => {
         setModal(false)
@@ -43,6 +59,12 @@ function App() {
         setModal(true)
         setActiveModal('addItem')
         setActiveItem(emptyItem)
+    }
+
+    const openAddCategoryModal = () => {
+        setModal(true)
+        setActiveModal('addCategory')
+        setActiveCategory(emptyCategory)
     }
 
     const updateShowItemInfo = (item : Item) => {
@@ -59,26 +81,42 @@ function App() {
         updateShowItemInfo(item)
     }
 
+    const openShowCategoriesModal = () => {
+        setModal(true)
+        setActiveModal('showCategories')
+    }
+
     const openEditItemModal = () => {
         setModal(true)
         setActiveModal('editItem')
     }
 
-    const addItem = (data: { get: (arg0: string) => any }) => {
-        const category : Category = {
-            id: 0,
-            name: 'Desconocido',
-        }
+    const openEditCategoryModal = (category : Category) => {
+        setModal(true)
+        setActiveCategory(category)
+        setActiveModal('editCategory')
+    }
 
+    const addItem = (data: { get: (arg0: string) => any }) => {
         const newItem : Item = {
             id: uuidv4(),
             name: data.get('name'),
             year: data.get('year'),
             genre: data.get('genre'),
-            category: category
+            category: categories.find(category => category.id === data.get('category'))!
         }
 
         setItems([...items, newItem])
+        closeModal()
+    }
+
+    const addCategory = (data: { get: (arg0: string) => any }) => {
+        const newCategory : Category = {
+            id: uuidv4(),
+            name: data.get('name')
+        }
+
+        setCategories([...categories, newCategory])
         closeModal()
     }
 
@@ -88,7 +126,7 @@ function App() {
             name: data.get('name'),
             year: data.get('year'),
             genre: data.get('genre'),
-            category: activeItem!.category
+            category: categories.find(category => category.id === data.get('category'))!
         }
 
         setItems(items.map(item => {
@@ -99,12 +137,28 @@ function App() {
         updateShowItemInfo(editedItem)
         setActiveModal('showItem')
     }
+
+    const editActiveCategory = (data: { get: (arg0: string) => any }) => {
+        const editedCategory : Category = {
+            id: activeCategory!.id,
+            name: data.get('name'),
+        }
+
+        setCategories(categories.map(category => {
+            if (category.id !== activeCategory!.id) return category
+            else return editedCategory
+        }))
+
+        setActiveModal('showCategories')
+    }
     
     return (
         <>
             <div id='main-container'>
                 <div>
                     <button onClick={openAddItemModal}>Añadir ítem</button>
+                    <button onClick={openAddCategoryModal}>Añadir categoría</button>
+                    <button onClick={openShowCategoriesModal}>Ver categorías</button>
                 </div>
                 <div id='backlog-items'>
                     {
@@ -172,6 +226,43 @@ function App() {
                     </div>
                 </div>
                 {/* SHOW ITEM MODAL END */}
+
+                {/* SHOW CATEGORIES MODAL START */}
+                <div className={'modal'} style={{display: activeModal === 'showCategories' ? '' : 'none'}}>
+                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                    {
+                        categories.map(category => (
+                            <div>{category.name}<a href='#' onClick={() => openEditCategoryModal(category)}>🖉 Editar</a></div>
+                        ))
+                    }
+                </div>
+                {/* SHOW CATEGORIES MODAL END */}
+
+                {/* ADD CATEGORY MODAL START */}
+                <div className={'modal'} style={{display: activeModal === 'addCategory' ? '' : 'none'}}>
+                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                    <div><b>Añadir categoría</b></div>
+                    <form action={addCategory}>
+                        <CategoryForm activeCategory={emptyCategory}/>
+                        <div className='form-div'>
+                            <button type="submit">Añadir</button>
+                        </div>
+                    </form>
+                </div>
+                {/* ADD CATEGORY MODAL END */}
+
+                {/* EDIT CATEGORY MODAL START */}
+                <div className={'modal'} style={{display: activeModal === 'editCategory' ? '' : 'none'}}>
+                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                    <div><b>Editar categoría</b></div>
+                    <form action={editActiveCategory}>
+                        <CategoryForm activeCategory={activeCategory}/>
+                        <div className='form-div'>
+                            <button type="submit">Editar</button>
+                        </div>
+                    </form>
+                </div>
+                {/* EDIT CATEGORY MODAL END */}
             </div>
         </>
     )
