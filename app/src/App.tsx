@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { categories } from './data/categories'
 import './App.css'
 import type { Category, Item } from './types/types'
@@ -19,11 +19,20 @@ function App() {
         genre: ''
     }
 
+    const initialItems = () => {
+        const itemsJson = localStorage.getItem('items')
+        return itemsJson ? JSON.parse(itemsJson) : []
+    }
+
     const [modal, setModal] = useState(false)
     const [activeItem, setActiveItem] = useState<Item>(emptyItem)
     const [activeModal, setActiveModal] = useState('')
 
-    const [items, setItems] = useState<Item[]>([])
+    const [items, setItems] = useState<Item[]>(initialItems())
+
+    useEffect(() => {
+        localStorage.setItem('items', JSON.stringify(items))
+    }, [items])
     
     const toggleModal = () => {
         setModal(false)
