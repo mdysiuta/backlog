@@ -72,7 +72,7 @@ function App() {
     const updateShowItemInfo = (item : Item) => {
         document.querySelector('#show-item-name')!.innerHTML = item.name
         document.querySelector('#show-item-year')!.innerHTML = item.year ? item.year.toString() : 'n/a'
-        document.querySelector('#show-item-category')!.innerHTML = item.category ? item.year.toString() : '---'
+        document.querySelector('#show-item-category')!.innerHTML = item.category ? item.category.name : '---'
         document.querySelector('#show-item-genre')!.innerHTML = item.genre ? item.genre : 'Desconocido'
     }
 
