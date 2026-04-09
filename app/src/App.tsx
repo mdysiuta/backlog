@@ -52,6 +52,8 @@ function App() {
     
     const closeModal = () => {
         setModal(false)
+        setActiveItem(emptyItem)
+        setActiveCategory(emptyCategory)
         setActiveModal('')
     }
 
