@@ -34,7 +34,7 @@ function App() {
         localStorage.setItem('items', JSON.stringify(items))
     }, [items])
     
-    const toggleModal = () => {
+    const closeModal = () => {
         setModal(false)
         setActiveModal('')
     }
@@ -45,7 +45,7 @@ function App() {
         setActiveItem(emptyItem)
     }
 
-    const toggleShowItemModal = (item : Item) => {
+    const openShowItemModal = (item : Item) => {
         setModal(true)
         setActiveItem(item)
         setActiveModal('showItem')
@@ -66,6 +66,11 @@ function App() {
         genre!.innerHTML = item.genre ? item.genre : 'Desconocido'
     }
 
+    const openEditItemModal = () => {
+        setModal(true)
+        setActiveModal('editItem')
+    }
+
     const addItem = (data: { get: (arg0: string) => any }) => {
         const category : Category = {
             id: 0,
@@ -81,10 +86,10 @@ function App() {
         }
 
         setItems([...items, newItem])
-        toggleModal()
+        closeModal()
     }
 
-    const editItem = (data: { get: (arg0: string) => any }) => {
+    const editActiveItem = (data: { get: (arg0: string) => any }) => {
         setItems(items.map(item => {
             if (item.id !== activeItem!.id) return item
             else return {
@@ -108,11 +113,6 @@ function App() {
 
         setActiveModal('showItem')
     }
-
-    const toggleEditModal = () => {
-        setModal(true)
-        setActiveModal('editItem')
-    }
     
     return (
         <>
@@ -123,7 +123,7 @@ function App() {
                 <div id='backlog-items'>
                     {
                         items.map(item => (
-                            <div className='backlog-item' key={item.id} onClick={() => toggleShowItemModal(item)}>
+                            <div className='backlog-item' key={item.id} onClick={() => openShowItemModal(item)}>
                                 <div className='item-title'>{item.name}</div>
                                 <div className='item-properties'>
                                     {item.year ? item.year : 'n/a'} | {item.genre ? item.genre : 'No especificado'}
@@ -134,11 +134,11 @@ function App() {
                 </div>
             </div>
             <div style={{display: modal ? '' : 'none'}}>
-                <div onClick={toggleModal} id={'modal-bg'} /> {/* BLACK OVERLAY */}
+                <div onClick={closeModal} id={'modal-bg'} /> {/* BLACK OVERLAY */}
 
                 {/* ADD ITEM MODAL START */}
                 <div className={'modal'} style={{display: activeModal === 'addItem' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={toggleModal}>&times;</div>
+                    <div className={'close-button'} onClick={closeModal}>&times;</div>
                     <div>
                         <b>Añadir ítem</b>
                     </div>
@@ -179,12 +179,12 @@ function App() {
 
                 {/* EDIT ITEM MODAL START */}
                 <div className={'modal'} style={{display: activeModal === 'editItem' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={toggleModal}>&times;</div>
+                    <div className={'close-button'} onClick={closeModal}>&times;</div>
                     <div>
                         <b>Editar ítem</b>
                     </div>
                     <div className={'custom-form'}>
-                        <form action={editItem} id='edit-item-form'>
+                        <form action={editActiveItem} id='edit-item-form'>
                             <ItemForm categories={categories} state={activeItem}></ItemForm>
                             <div className='form-div'>
                                 <button>Editar</button>
@@ -196,7 +196,7 @@ function App() {
 
                 {/* SHOW ITEM MODAL START */}
                 <div className={'modal'} style={{display: activeModal === 'showItem' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={toggleModal}>&times;</div>
+                    <div className={'close-button'} onClick={closeModal}>&times;</div>
                     <div><b>Nombre</b></div>
                     <div id='show-item-name'/>
                     <div><b>Año</b></div>
@@ -206,7 +206,7 @@ function App() {
                     <div><b>Género</b></div>
                     <div id='show-item-genre'/>
                     <div>
-                        <a href='#' onClick={toggleEditModal}>🖉 Editar</a>
+                        <a href='#' onClick={openEditItemModal}>🖉 Editar</a>
                     </div>
                 </div>
                 {/* SHOW ITEM MODAL END */}
