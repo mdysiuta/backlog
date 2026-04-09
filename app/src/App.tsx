@@ -45,25 +45,18 @@ function App() {
         setActiveItem(emptyItem)
     }
 
+    const updateShowItemInfo = (item : Item) => {
+        document.querySelector('#show-item-name')!.innerHTML = item.name
+        document.querySelector('#show-item-year')!.innerHTML = item.year ? item.year.toString() : 'n/a'
+        document.querySelector('#show-item-category')!.innerHTML = item.category.name
+        document.querySelector('#show-item-genre')!.innerHTML = item.genre ? item.genre : 'Desconocido'
+    }
+
     const openShowItemModal = (item : Item) => {
         setModal(true)
         setActiveItem(item)
         setActiveModal('showItem')
-
-        const name : Element | null = document.querySelector('#show-item-name')
-        const year : Element | null = document.querySelector('#show-item-year')
-        const category : Element | null = document.querySelector('#show-item-category')
-        const genre : Element | null = document.querySelector('#show-item-genre')
-
-        name!.innerHTML = ''
-        year!.innerHTML = ''
-        category!.innerHTML = ''
-        genre!.innerHTML = ''
-
-        name!.innerHTML = item.name
-        year!.innerHTML = item.year ? item.year.toString() : 'n/a'
-        category!.innerHTML = item.category.name
-        genre!.innerHTML = item.genre ? item.genre : 'Desconocido'
+        updateShowItemInfo(item)
     }
 
     const openEditItemModal = () => {
@@ -90,27 +83,20 @@ function App() {
     }
 
     const editActiveItem = (data: { get: (arg0: string) => any }) => {
+        const editedItem : Item = {
+            id: activeItem!.id,
+            name: data.get('name'),
+            year: data.get('year'),
+            genre: data.get('genre'),
+            category: activeItem!.category
+        }
+
         setItems(items.map(item => {
             if (item.id !== activeItem!.id) return item
-            else return {
-                id: activeItem!.id,
-                name: data.get('name'),
-                year: data.get('year'),
-                genre: data.get('genre'),
-                category: activeItem!.category
-            }
+            else return editedItem
         }))
 
-        const name : Element | null = document.querySelector('#show-item-name')
-        const year : Element | null = document.querySelector('#show-item-year')
-        const category : Element | null = document.querySelector('#show-item-category')
-        const genre : Element | null = document.querySelector('#show-item-genre')
-
-        name!.innerHTML = data.get('name'),
-        year!.innerHTML = data.get('year') ? data.get('year').toString() : 'n/a'
-        category!.innerHTML = activeItem!.category.name
-        genre!.innerHTML = data.get('genre') ? data.get('genre') : 'Desconocido'
-
+        updateShowItemInfo(editedItem)
         setActiveModal('showItem')
     }
     
