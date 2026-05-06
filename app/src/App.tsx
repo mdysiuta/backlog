@@ -35,12 +35,13 @@ function App() {
     }
 
     const [modal, setModal] = useState(false)
-    const [activeItem, setActiveItem] = useState<Item>(emptyItem)
-    const [activeCategory, setActiveCategory] = useState<Category>(emptyCategory)
     const [activeModal, setActiveModal] = useState('')
 
     const [items, setItems] = useState<Item[]>(initialItems())
     const [categories, setCategories] = useState<Category[]>(initialCategories())
+
+    const [activeItem, setActiveItem] = useState<Item>(emptyItem)
+    const [activeCategory, setActiveCategory] = useState<Category>(emptyCategory)
 
     useEffect(() => {
         localStorage.setItem('items', JSON.stringify(items))
@@ -49,7 +50,7 @@ function App() {
     useEffect(() => {
         localStorage.setItem('categories', JSON.stringify(categories))
     }, [categories])
-    
+
     const closeModal = () => {
         setModal(false)
         setActiveItem(emptyItem)
@@ -67,13 +68,6 @@ function App() {
         setModal(true)
         setActiveModal('addCategory')
         setActiveCategory(emptyCategory)
-    }
-
-    const updateShowItemInfo = (item : Item) => {
-        document.querySelector('#show-item-name')!.innerHTML = item.name
-        document.querySelector('#show-item-year')!.innerHTML = item.year ? item.year.toString() : 'n/a'
-        document.querySelector('#show-item-category')!.innerHTML = item.category ? item.category.name : '---'
-        document.querySelector('#show-item-genre')!.innerHTML = item.genre ? item.genre : 'Desconocido'
     }
 
     const openShowItemModal = (item : Item) => {
@@ -110,6 +104,13 @@ function App() {
         document.querySelector('#confirm-delete-name')!.innerHTML = activeCategory.name
         setActiveCategory(category)
         setActiveModal('deleteCategory')
+    }
+
+    const updateShowItemInfo = (item : Item) => {
+        document.querySelector('#show-item-name')!.innerHTML = item.name
+        document.querySelector('#show-item-year')!.innerHTML = item.year ? item.year.toString() : 'n/a'
+        document.querySelector('#show-item-category')!.innerHTML = item.category ? item.category.name : '---'
+        document.querySelector('#show-item-genre')!.innerHTML = item.genre ? item.genre : 'Desconocido'
     }
 
     const addItem = (data: { get: (arg0: string) => any }) => {
