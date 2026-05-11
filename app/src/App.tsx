@@ -4,6 +4,7 @@ import type { Category, Item } from './types/types'
 import { v4 as uuidv4 } from 'uuid';
 import ItemForm from './components/ItemForm';
 import CategoryForm from './components/CategoryForm';
+import ModalContainer from './components/ModalContainer';
 
 function App() {
     const category : Category = {
@@ -204,12 +205,10 @@ function App() {
                     }
                 </div>
             </div>
-            <div style={{display: modal ? '' : 'none'}}>
-                <div onClick={closeModal} id={'modal-bg'} /> {/* BLACK OVERLAY */}
 
-                {/* ADD ITEM MODAL START */}
-                <div className={'modal'} style={{display: activeModal === 'addItem' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+            <ModalContainer active={modal} closeModalFunc={closeModal}>
+
+                <div style={{display: activeModal === 'addItem' ? '' : 'none'}}>
                     <div>
                         <b>Añadir ítem</b>
                     </div>
@@ -222,11 +221,8 @@ function App() {
                         </form>
                     </div>
                 </div>
-                {/* ADD ITEM MODAL END */}
 
-                {/* EDIT ITEM MODAL START */}
-                <div className={'modal'} style={{display: activeModal === 'editItem' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                <div style={{display: activeModal === 'editItem' ? '' : 'none'}}>
                     <div>
                         <b>Editar ítem</b>
                     </div>
@@ -239,11 +235,8 @@ function App() {
                         </form>
                     </div>
                 </div>
-                {/* EDIT ITEM MODAL END */}
 
-                {/* SHOW ITEM MODAL START */}
-                <div className={'modal'} style={{display: activeModal === 'showItem' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                <div style={{display: activeModal === 'showItem' ? '' : 'none'}}>
                     <div><b>Nombre</b></div>
                     <div id='show-item-name'/>
                     <div><b>Año</b></div>
@@ -259,11 +252,8 @@ function App() {
                         <a href='#' style={{color: 'red'}} onClick={openConfirmDeleteItemModal}>🗑 Eliminar</a>
                     </div>
                 </div>
-                {/* SHOW ITEM MODAL END */}
 
-                {/* SHOW CATEGORIES MODAL START */}
-                <div className={'modal'} style={{display: activeModal === 'showCategories' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                <div style={{display: activeModal === 'showCategories' ? '' : 'none'}}>
                     {
                         categories.map(category => (
                             <div>
@@ -274,11 +264,8 @@ function App() {
                         ))
                     }
                 </div>
-                {/* SHOW CATEGORIES MODAL END */}
 
-                {/* ADD CATEGORY MODAL START */}
-                <div className={'modal'} style={{display: activeModal === 'addCategory' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                <div style={{display: activeModal === 'addCategory' ? '' : 'none'}}>
                     <div><b>Añadir categoría</b></div>
                     <form action={addCategory}>
                         <CategoryForm activeCategory={emptyCategory}/>
@@ -287,11 +274,8 @@ function App() {
                         </div>
                     </form>
                 </div>
-                {/* ADD CATEGORY MODAL END */}
 
-                {/* EDIT CATEGORY MODAL START */}
-                <div className={'modal'} style={{display: activeModal === 'editCategory' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                <div style={{display: activeModal === 'editCategory' ? '' : 'none'}}>
                     <div><b>Editar categoría</b></div>
                     <form action={editActiveCategory}>
                         <CategoryForm activeCategory={activeCategory}/>
@@ -300,26 +284,20 @@ function App() {
                         </div>
                     </form>
                 </div>
-                {/* EDIT CATEGORY MODAL END */}
 
-                {/* CONFIRM DELETE ITEM MODAL START */}
-                <div className={'modal'} style={{display: activeModal === 'deleteItem' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                <div style={{display: activeModal === 'deleteItem' ? '' : 'none'}}>
                     <div>¿Está seguro que desea eliminar el ítem '<b><span id="confirm-delete-name"></span></b>'?</div>
                     <div style={{color: 'red'}}><b>Esta acción es irreversible.</b></div>
                     <button onClick={deleteActiveItem}>Eliminar</button>
                 </div>
-                {/* CONFIRM DELETE ITEM MODAL END */}
-
-                {/* CONFIRM DELETE CATEGORY MODAL START */}
-                <div className={'modal'} style={{display: activeModal === 'deleteCategory' ? '' : 'none'}}>
-                    <div className={'close-button'} onClick={closeModal}>&times;</div>
+                
+                <div style={{display: activeModal === 'deleteCategory' ? '' : 'none'}}>
                     <div>¿Está seguro que desea eliminar la categoría '<b><span id="confirm-delete-name"></span></b>'?</div>
                     <div style={{color: 'red'}}><b>Esta acción es irreversible.</b></div>
                     <button onClick={deleteActiveCategory}>Eliminar</button>
                 </div>
-                {/* CONFIRM DELETE CATEGORY MODAL END */}
-            </div>
+                
+            </ModalContainer>
         </>
     )
 }
